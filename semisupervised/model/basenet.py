@@ -41,7 +41,7 @@ class AlexNetBase(nn.Module):
         #print(model_alexnet.features)
         self.features = nn.Sequential(*list(model_alexnet.features._modules.values())[:])
         self.classifier = nn.Sequential()
-        for i in xrange(6):
+        for i in range(6):
             self.classifier.add_module("classifier" + str(i), model_alexnet.classifier[i])
         self.__in_features = model_alexnet.classifier[6].in_features
     def forward(self, x):

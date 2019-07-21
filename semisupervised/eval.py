@@ -55,7 +55,7 @@ if "resnet" in args.net:
     F1 = Predictor_deep(num_class=len(class_list),
                         inc=inc)
 else:
-    F1 = Predictor(num_class=len(class_list), inc=inc, cosine=True, temp=args.T)
+    F1 = Predictor(num_class=len(class_list), inc=inc, temp=args.T)
 G.cuda()
 F1.cuda()
 G.load_state_dict(torch.load(os.path.join(args.checkpath, "G_iter_model_{}_{}_to_{}_step_{}.pth.tar".format(args.method, args.source, args.target, args.step))))
@@ -81,8 +81,8 @@ def eval(loader,output_file="output.txt"):
     with open(output_file, "w") as f:
         with torch.no_grad():
             for batch_idx, data_t in tqdm(enumerate(loader)):
-                im_data_t.data.resize_(data_t[0].size()).copy_(data_t[0])
-                gt_labels_t.data.resize_(data_t[1].size()).copy_(data_t[1])
+                im_data_t.resize_(data_t[0].size()).copy_(data_t[0])
+                gt_labels_t.resize_(data_t[1].size()).copy_(data_t[1])
                 paths = data_t[2]
                 feat = G(im_data_t)
                 output1 = F1(feat)

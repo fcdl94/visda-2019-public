@@ -8,7 +8,7 @@ import PIL
 from PIL import Image
 import pdb
 import random
-import cPickle
+import _pickle
 from torch.utils.data.sampler import WeightedRandomSampler
 
 
