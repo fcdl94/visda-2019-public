@@ -9,10 +9,14 @@ import torch.optim as optim
 from torch.autograd import Variable
 from model.resnet import resnet34, resnet50
 from model.basenet import AlexNetBase, VGGBase, Predictor, Predictor_deep
+from methods.ST import Source_Target
+from methods.ENT import Entropy
+from methods.MME import MMEntropy
 from utils.utils import weights_init
 from utils.lr_schedule import inv_lr_scheduler
 from utils.return_dataset import return_dataset
 from utils.loss import entropy, adentropy
+
 # Training settings
 parser = argparse.ArgumentParser(description='Visda Classification')
 parser.add_argument('--steps', type=int, default=50000, metavar='N',
@@ -94,6 +98,7 @@ lr = args.lr
 G.cuda()
 F1.cuda()
 
+# TODO- Remove following code.
 im_data_s = torch.FloatTensor(1)
 im_data_t = torch.FloatTensor(1)
 im_data_tu = torch.FloatTensor(1)
@@ -121,6 +126,7 @@ sample_labels_s = Variable(sample_labels_s)
 if os.path.exists(args.checkpath) == False:
     os.mkdir(args.checkpath)
 
+# Train method is now useless. TODO-REMOVE
 def train():
     G.train()
     F1.train()
@@ -242,4 +248,13 @@ def test(loader):
     return test_loss.data, 100. * float(correct) / size
 
 
-train()
+#train()
+
+if args.method == "S+T":
+    method = Source_Target(G, F1, args, source_loader, target_loader, target_loader_unl, class_list)
+elif args.method == "ENT":
+    method = Entropy(G, F1, args, source_loader, target_loader, target_loader_unl, class_list)
+elif args.method == "MME":
+    method = MMEntropy(G, F1, args, source_loader, target_loader, target_loader_unl, class_list)
+
+method.train()
