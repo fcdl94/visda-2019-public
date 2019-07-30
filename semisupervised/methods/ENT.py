@@ -7,11 +7,7 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from torch.autograd import Variable
-from model.resnet import resnet34, resnet50
-from model.basenet import AlexNetBase, VGGBase, Predictor, Predictor_deep
-from utils.utils import weights_init
 from utils.lr_schedule import inv_lr_scheduler
-from utils.return_dataset import return_dataset
 from utils.loss import entropy, adentropy
 
 class Entropy():
